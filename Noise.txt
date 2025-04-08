@@ -1,0 +1,10 @@
+Noise Level (Std of Daily Returns): 0.0243
+What It Means:
+This is the standard deviation of the daily returns of the stock price, calculated as the percentage change in price from one day to the next (pct_change in the assess_noise method).
+Standard deviation measures the variability or volatility of the daily returns. A higher value indicates more volatility (i.e., larger price fluctuations), which is often interpreted as noise in financial time series data.
+Interpretation of 0.0243:
+A standard deviation of 0.0243 means the daily returns typically fluctuate by about 2.43% (since 0.0243 = 2.43%) around the mean return.
+This is a relatively low level of volatility for a stock, suggesting that the stock’s daily price changes are not extremely erratic. For context:
+A highly volatile stock (e.g., a small-cap or tech stock) might have a daily return standard deviation of 5% or more.
+A stable stock (e.g., a large-cap or utility stock) might have a daily return standard deviation closer to 1-2%.
+In your case, 2.43% indicates moderate volatility, meaning the stock experiences some noise but isn’t excessively erratic. This aligns with the "Daily Returns (Showing Volatility)" plot from your first

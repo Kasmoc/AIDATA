@@ -1,0 +1,13 @@
+Tilegnelse af et egnet datasæt til arbejde med manglende data (eksempler)
+
+Identificer typer af datamangel
+
+Implementer/anvend minimum 2 dataimputeringsmetoder til at håndtere manglende data og sammelign (f.eks. ved brug af classifier med/uden imputering)
+
+Strukturér data i minimum 2 relationelle databaser (se eksempel fra Forelæsning 2)
+
+Vurder graden af støj for den eller de tidsseriedata der er i datasættet gennem datavisualisering.
+
+Anvend et passende præprocessering (moving average, eller frekvensedomænefiltrering).
+
+Plot data før og efter præprocessering.
