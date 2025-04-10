@@ -8,6 +8,7 @@ from scipy.stats import gaussian_kde
 # Load dataset
 data = pd.read_csv("medical_students_dataset.csv")
 
+categorical_columns = ['Gender', 'Blood Type', 'Diabetes', 'Smoking']
 
 # One-hot-encode categorical features
 data_encoded = pd.get_dummies(data, columns=categorical_columns)
@@ -126,12 +127,10 @@ numeric_columns = data_encoded.select_dtypes(include=['number']).columns
 data_encoded[numeric_columns].hist(figsize=(12, 10), bins=30, edgecolor="black")
 plt.suptitle("Data Distribution After Processing")
 plt.tight_layout()
-<<<<<<< HEAD
 plt.show()
 
 # Save the processed dataset
 output_path = r"C:\Users\anne\Desktop\Daki\s2\ai_and_data\miniprojekt\data\processed_medical_data.csv"
 data_encoded.to_csv(output_path, index=False)
 print(f"\nProcessed data saved to: {output_path}")
-=======
 plt.show()
