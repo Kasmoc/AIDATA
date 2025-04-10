@@ -1,29 +1,16 @@
 import pandas as pd
 import numpy as np 
-<<<<<<< HEAD
-import matplotlib.pyplot as plt
-from scipy.stats import gaussian_kde
-
-# Load dataset
-data = pd.read_csv("ai_and_data\miniprojekt\data\medical_students_dataset.csv")
-=======
 from sklearn.impute import SimpleImputer
 import seaborn as sns
 import matplotlib.pyplot as plt
-import os
-from sklearn.ensemble import RandomForestRegressor 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import gaussian_kde
 
 # Load dataset
 data = pd.read_csv("medical_students_dataset.csv")
 
->>>>>>> a74177ba7bae21d5c190620ce30dfe8f0f91fb64
 
 # One-hot-encode categorical features
-data_encoded = pd.get_dummies(data, columns=['Gender', 'Blood Type', 'Diabetes', 'Smoking'])
+data_encoded = pd.get_dummies(data, columns=categorical_columns)
 
 # Plot histograms for all numerical features (before processing)
 numeric_columns = data_encoded.select_dtypes(include=['number']).columns
@@ -67,14 +54,10 @@ kde_columns = ['BMI', 'Temperature']
 
 # Function for sampling imputation
 def sampling_imputation(df, columns):
-<<<<<<< HEAD
-    
-=======
     """
     Perform sampling imputation on specified columns.
     For each column with missing values, randomly sample from the observed values.
     """
->>>>>>> a74177ba7bae21d5c190620ce30dfe8f0f91fb64
     df_imputed = df.copy()
     
     for column in columns:
@@ -99,13 +82,9 @@ def sampling_imputation(df, columns):
 
 # Function for KDE imputation
 def kde_imputation(df, columns):
-<<<<<<< HEAD
-
-=======
     """
     Perform KDE (Kernel Density Estimation) imputation on specified columns.
     """
->>>>>>> a74177ba7bae21d5c190620ce30dfe8f0f91fb64
     df_imputed = df.copy()
     
     for column in columns:
@@ -156,4 +135,3 @@ data_encoded.to_csv(output_path, index=False)
 print(f"\nProcessed data saved to: {output_path}")
 =======
 plt.show()
->>>>>>> a74177ba7bae21d5c190620ce30dfe8f0f91fb64
