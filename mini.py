@@ -1,21 +1,16 @@
 import pandas as pd
 import numpy as np 
-from sklearn.impute import SimpleImputer
-import seaborn as sns
 import matplotlib.pyplot as plt
-import os
-from sklearn.ensemble import RandomForestRegressor 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score
 from scipy.stats import gaussian_kde
 
 # Load dataset
 data = pd.read_csv("medical_students_dataset.csv")
 
+# Store original categorical columns before encoding
+categorical_columns = ['Gender', 'Blood Type', 'Diabetes', 'Smoking']
 
 # One-hot-encode categorical features
-data_encoded = pd.get_dummies(data, columns=['Gender', 'Blood Type', 'Diabetes', 'Smoking'])
+data_encoded = pd.get_dummies(data, columns=categorical_columns)
 
 # Plot histograms for all numerical features (before processing)
 numeric_columns = data_encoded.select_dtypes(include=['number']).columns
@@ -59,10 +54,6 @@ kde_columns = ['BMI', 'Temperature']
 
 # Function for sampling imputation
 def sampling_imputation(df, columns):
-    """
-    Perform sampling imputation on specified columns.
-    For each column with missing values, randomly sample from the observed values.
-    """
     df_imputed = df.copy()
     
     for column in columns:
@@ -87,9 +78,6 @@ def sampling_imputation(df, columns):
 
 # Function for KDE imputation
 def kde_imputation(df, columns):
-    """
-    Perform KDE (Kernel Density Estimation) imputation on specified columns.
-    """
     df_imputed = df.copy()
     
     for column in columns:
@@ -132,3 +120,45 @@ data_encoded[numeric_columns].hist(figsize=(12, 10), bins=30, edgecolor="black")
 plt.suptitle("Data Distribution After Processing")
 plt.tight_layout()
 plt.show()
+
+# REVERSE DUMMY ENCODING before saving
+# Create a new DataFrame for the final output with reversed encodings
+data_final = data_encoded.copy()
+
+# Helper function to reverse one-hot encoding for a given category
+def reverse_one_hot(df, prefix):
+    # Get all columns for this category
+    category_cols = [col for col in df.columns if col.startswith(f"{prefix}_")]
+    
+    if not category_cols:
+        print(f"Warning: No columns found with prefix '{prefix}_'")
+        return df
+    
+    # Create a new column with the category name
+    df[prefix] = None
+    
+    # For each row, find which column has a 1 and assign that category
+    for i, row in df.iterrows():
+        for col in category_cols:
+            if row[col] == 1:
+                # Extract the category value from the column name
+                category_value = col.replace(f"{prefix}_", "")
+                df.at[i, prefix] = category_value
+                break
+    
+    # Drop the one-hot columns
+    df = df.drop(columns=category_cols)
+    
+    return df
+
+# Reverse encoding for each categorical feature
+for category in categorical_columns:
+    data_final = reverse_one_hot(data_final, category)
+
+# Show the first few rows to verify the columns are restored
+print("\nFirst few rows after reversing one-hot encoding:")
+print(data_final.head())
+
+output_path = r"processed_medical_data.csv"
+data_final.to_csv(output_path, index=False)
+print(f"\nProcessed data saved to: {output_path}")
