@@ -2,8 +2,6 @@ import math
 
 def moving_average(data, window_size=5):
     """
-    Calculate moving average with hardcoded math.
-    
     Parameters:
     data (list): Input signal data
     window_size (int): Size of the moving average window
