@@ -6,7 +6,11 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 
 # Load dataset
-data = pd.read_csv("medical_students_dataset.csv")
+data = pd.read_csv(r"medical_students_dataset.csv")
+
+print(data.head())
+print(data.info())
+
 
 categorical_columns = ['Gender', 'Blood Type', 'Diabetes', 'Smoking']
 
