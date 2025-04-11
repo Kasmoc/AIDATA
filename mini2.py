@@ -66,11 +66,11 @@ def custom_moving_average(signal, M):
 
     return np.array(output)
 
-df['CustomMA'] = custom_moving_average(df['Close'], M=30)
+df['CustomMA'] = custom_moving_average(df['Close'], M=20)
 
 plt.figure(figsize=(12, 5))
 plt.plot(df['Date'], df['Close'], label='Raw Close Price', alpha=0.5)
-plt.plot(df['Date'], df['CustomMA'], label='30-Day Moving Average', color='red')
+plt.plot(df['Date'], df['CustomMA'], label='20-Day Moving Average', color='red')
 plt.title("Stock Prices Before and After Moving Average")
 plt.xlabel("Date")
 plt.ylabel("Price")
