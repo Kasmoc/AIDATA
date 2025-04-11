@@ -24,21 +24,17 @@ plt.suptitle("Data Distribution Before Processing")
 plt.tight_layout()
 plt.show()
 
-# DUPLICATES HANDLING - Keep duplicate rows with least NaN values
-# Count missing values per row
-data_encoded['missing_count'] = data_encoded.isna().sum(axis=1)
+def first_non_null(series):
+    return series.dropna().iloc[0] if not series.dropna().empty else np.nan
 
-# Print duplicates before removal
-duplicate_ids = data_encoded['Student ID'].duplicated(keep=False)
-print(f"\nDuplicates found before processing: {duplicate_ids.sum()}")
-if duplicate_ids.sum() > 0:
-    print(data_encoded[duplicate_ids].sort_values('Student ID'))
+# Single-pass solution
+encoded_df = (data_encoded.groupby('Student ID', as_index=False)
+             .agg(first_non_null)
+             .sort_values('Student ID')
+             .reset_index(drop=True))
 
-# Keep the row with the fewest missing values for each Student ID
-data_encoded = data_encoded.loc[data_encoded.groupby('Student ID')['missing_count'].idxmin()]
-
-# Drop helper column
-data_encoded = data_encoded.drop(columns='missing_count')
+# Remove completely empty rows if needed
+data_encoded = encoded_df.dropna(how='all')
 
 # Sort by Student ID and reset index
 data_encoded = data_encoded.sort_values('Student ID').reset_index(drop=True)
