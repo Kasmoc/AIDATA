@@ -5,20 +5,52 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 #Load dataset
-data2 = pd.read_csv(r"C:\Users\anne\Desktop\Daki\s2\ai_and_data\miniprojekt\data2\AAPL_2006-01-01_to_2018-01-01.csv")
+df = pd.read_csv(r"stock_data.csv", parse_dates=['Date'])
+df.sort_values('Date', inplace=True)
 
-#print(data2.head())
-#print(data2.info())
+print(df.head())
+print(df.info())
 
-signal = data2[['Open', 'High', 'Low', 'Close', 'Volume']].values
+plt.figure(figsize=(12, 5))
+plt.plot(df['Date'], df['Close'], label='Raw Close Price')
+plt.title("Raw Stock Prices (Close)")
+plt.xlabel("Date")
+plt.ylabel("Price")
+plt.legend()
+plt.show()
 
-features = ['Open', 'High', 'Low', 'Close', 'Volume']
-fft_results = {}
+def iqr_outliers(df, column=['Close']):
+    Q1 = df['Close'].quantile(0.25)
+    Q3 = df['Close'].quantile(0.75)
+    IQR = Q3 - Q1
 
-for feature in features:
-    sig = data2[feature].values
-    fft = np.fft.fft(sig)
-    fft_results[feature] = fft
+    # Outlier-grænser
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    outliers = df[(df['Close'] < lower_bound) | (df['Close'] > upper_bound)]
+
+    return outliers
+
+# Kald funktionen
+outliers = iqr_outliers(df)
+
+df['Outlier'] = False
+df.loc[outliers.index, 'Outlier'] = True
+
+# Plot
+plt.figure(figsize=(12, 5))
+plt.plot(df['Date'], df['Close'], label='Close Price', alpha=0.6)
+plt.scatter(df[df['Outlier']]['Date'], df[df['Outlier']]['Close'], 
+            color='red', label='Outliers', zorder=5)
+plt.title("Outliers i aktiepriser over tid")
+plt.xlabel("Date")
+plt.ylabel("Close Price")
+plt.legend()
+plt.show()
+
+# 🖨 Valgfrit: Vis antal outliers
+print(f"Antal outliers i 'Close': {len(outliers)}")
 
 
 def custom_moving_average(signal, M):
@@ -34,49 +66,13 @@ def custom_moving_average(signal, M):
 
     return np.array(output)
 
-fft = np.fft.fft(data2['Close'].values)
-freqs = np.fft.fftfreq(len(fft), d=1)
-magnitude = np.abs(fft)
+df['CustomMA'] = custom_moving_average(df['Close'], M=30)
 
-# Only positive freqs
-plt.plot(freqs[:len(freqs)//2], magnitude[:len(freqs)//2])
-plt.title("Frequency Spectrum of Close Prices")
-plt.xlabel("Frequency [1/days]")
-plt.ylabel("Magnitude")
-plt.grid(True)
-plt.show()
-
-'''
-data2.plot(figsize=(10, 6))
-
-plt.tight_layout()
-plt.show()
-
-window_size = 251
-for col in ['Open', 'High', 'Low', 'Close', 'Volume']:
-    #data2[f'{col}_SMA_{window_size}'] = data2[col].rolling(window=window_size).mean()
-
-
-
-plt.figure(figsize=(10, 5))
-plt.plot(data2['Close'], label='Original')
-plt.plot(data2['Close_SMA_251'], label='SMA (251)', linewidth=2)
-plt.title("Close Price - Original vs Smoothed")
-plt.xlabel("Time")
+plt.figure(figsize=(12, 5))
+plt.plot(df['Date'], df['Close'], label='Raw Close Price', alpha=0.5)
+plt.plot(df['Date'], df['CustomMA'], label='30-Day Moving Average', color='red')
+plt.title("Stock Prices Before and After Moving Average")
+plt.xlabel("Date")
 plt.ylabel("Price")
 plt.legend()
-plt.grid(True)
-plt.tight_layout()
 plt.show()
-
-plt.figure(figsize=(10, 5))
-plt.plot(data2['High'], label='Original')
-plt.plot(data2['High_SMA_251'], label='SMA (251)', linewidth=2)
-plt.title("High Price - Original vs Smoothed")
-plt.xlabel("Time")
-plt.ylabel("High")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()'
-'''
