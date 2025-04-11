@@ -19,39 +19,6 @@ plt.ylabel("Price")
 plt.legend()
 plt.show()
 
-def iqr_outliers(df, column=['Close']):
-    Q1 = df['Close'].quantile(0.25)
-    Q3 = df['Close'].quantile(0.75)
-    IQR = Q3 - Q1
-
-    # Outlier-grænser
-    lower_bound = Q1 - 1.5 * IQR
-    upper_bound = Q3 + 1.5 * IQR
-
-    outliers = df[(df['Close'] < lower_bound) | (df['Close'] > upper_bound)]
-
-    return outliers
-
-# Kald funktionen
-outliers = iqr_outliers(df)
-
-df['Outlier'] = False
-df.loc[outliers.index, 'Outlier'] = True
-
-# Plot
-plt.figure(figsize=(12, 5))
-plt.plot(df['Date'], df['Close'], label='Close Price', alpha=0.6)
-plt.scatter(df[df['Outlier']]['Date'], df[df['Outlier']]['Close'], 
-            color='red', label='Outliers', zorder=5)
-plt.title("Outliers i aktiepriser over tid")
-plt.xlabel("Date")
-plt.ylabel("Close Price")
-plt.legend()
-plt.show()
-
-# 🖨 Valgfrit: Vis antal outliers
-print(f"Antal outliers i 'Close': {len(outliers)}")
-
 
 def custom_moving_average(signal, M):
     N = len(signal)
