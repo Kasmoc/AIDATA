@@ -43,3 +43,46 @@ plt.xlabel("Date")
 plt.ylabel("Price")
 plt.legend()
 plt.show()
+
+# Extract Close prices
+close_prices = df['Close'].values
+
+# Detrend by subtracting the mean (centering the data)
+detrended_prices = close_prices - np.mean(close_prices)
+
+# Perform FFT
+fft_values = np.fft.fft(detrended_prices)
+fft_frequencies = np.fft.fftfreq(len(detrended_prices))
+
+# Only positive frequencies
+positive_freq_indices = fft_frequencies > 0
+
+# Plot FFT magnitude
+plt.figure(figsize=(12, 6))
+plt.plot(fft_frequencies[positive_freq_indices], np.abs(fft_values)[positive_freq_indices])
+plt.title("FFT Frequency Spectrum of Detrended Close Prices")
+plt.xlabel("Frequency (cycles per day)")
+plt.ylabel("Magnitude")
+plt.grid(True)
+plt.show()
+
+# Define cutoff frequency (keep only slow trends)
+cutoff = 0.02
+
+# Create a filtered FFT version (zero out high frequencies)
+fft_filtered = fft_values.copy()
+fft_filtered[np.abs(fft_frequencies) > cutoff] = 0
+
+# Inverse FFT to reconstruct cleaned signal in time domain
+filtered_prices = np.fft.ifft(fft_filtered).real + np.mean(close_prices)
+
+# Plot original vs. cleaned signal
+plt.figure(figsize=(12, 6))
+plt.plot(df['Date'], close_prices, label='Original Close Prices', alpha=0.5)
+plt.plot(df['Date'], filtered_prices, label='Cleaned (Low-Pass Filtered)', color='red')
+plt.title("Original vs Cleaned Stock Prices using FFT Filtering (Cutoff = 0.02)")
+plt.xlabel("Date")
+plt.ylabel("Close Price")
+plt.legend()
+plt.grid(True)
+plt.show()
