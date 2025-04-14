@@ -4,7 +4,7 @@ from sklearn.impute import SimpleImputer
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-#Load dataset
+# Load dataset
 df = pd.read_csv(r"stock_data.csv", parse_dates=['Date'])
 df.sort_values('Date', inplace=True)
 
