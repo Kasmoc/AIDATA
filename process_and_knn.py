@@ -119,7 +119,7 @@ def main(input_path, output_path, sampling_columns, kde_columns, save_output=Fal
     visualize_data(df, "Raw Data")
 
     # knn before imputation
-    #knn_classifier(df)
+    knn_classifier(df)
 
     # Transform and impute missing values
     df = impute_values(df, sampling_columns, kde_columns)
@@ -127,7 +127,7 @@ def main(input_path, output_path, sampling_columns, kde_columns, save_output=Fal
     visualize_data(df, "Processed Data")
 
     # knn after imputation
-    #knn_classifier(df)
+    knn_classifier(df)
     
     if save_output: 
         # Save processed data
@@ -145,5 +145,5 @@ sampling_columns= ['Heart Rate', 'Age', 'Height', 'Weight', 'Blood Pressure', 'C
 ,
 kde_columns= ['BMI', 'Temperature']
 ,
-save_output=True
+save_output=False
 )
