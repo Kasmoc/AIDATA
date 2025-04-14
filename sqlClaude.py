@@ -3,12 +3,12 @@ import csv
 import os
 
 # Create connection to databases
-conn_students = sqlite3.connect('students.db')
-conn_health = sqlite3.connect('health_records.db')
+connect_students = sqlite3.connect('students.db')
+connect_health = sqlite3.connect('health_records.db')
 
 # Create cursors
-c_students = conn_students.cursor()
-c_health = conn_health.cursor()
+c_students = connect_students.cursor()
+c_health = connect_health.cursor()
 
 # Create tables
 c_students.execute('''
@@ -132,8 +132,8 @@ success = import_from_csv(csv_file)
 
 # Commit changes and close connections
 if success:
-    conn_students.commit()
-    conn_health.commit()
+    connect_students.commit()
+    connect_health.commit()
     print(f"Data from {csv_file} has been imported into the databases successfully.")
     # Verify by counting rows
     c_students.execute("SELECT COUNT(*) FROM students")
@@ -144,5 +144,5 @@ if success:
 else:
     print("Import failed. No changes were committed to the databases.")
 
-conn_students.close()
-conn_health.close()
+connect_students.close()
+connect_health.close()

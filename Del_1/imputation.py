@@ -33,7 +33,7 @@ def impute_values(df, sampling_cols, kde_cols):
         # Build Gaussian KDE based on the non-null values
         kde = gaussian_kde(non_null_vals)
 
-        # Generate new samples from the estimated density; note resample returns a 2D array.
+        # Generate new samples from the estimated density
         kde_samples = kde.resample(n_missing)[0]
         df.loc[df[col].isnull(), col] = kde_samples
     
@@ -47,33 +47,18 @@ def visualize_data(df, title):
     plt.tight_layout()
     plt.show()
 
-def knn(df):
-    # Placeholder for KNN imputation function
-    pass
-
-def evaluate_model(model):
-    # Placeholder for model evaluation function
-    pass
-
-def main(input_path, output_path, categorical_columns, sampling_columns, kde_columns, save_output=False):
+def main(input_path, output_path, sampling_columns, kde_columns, save_output=False):
     # Load and process data
     df = Load_and_clean_data(input_path)
     
     # Visualize raw data
     visualize_data(df, "Raw Data")
 
-    # knn before imputation
-    evaluate_model(knn(df))
-
     # Transform and impute
-    df = pd.get_dummies(df, categorical_columns, dummy_na=False)
     df = impute_values(df, sampling_columns, kde_columns)
     
     # Visualize processed data
     visualize_data(df, "Processed Data")
-
-    # knn after imputation
-    evaluate_model(knn(df))
     
     if save_output: 
         # Save processed data
@@ -86,8 +71,6 @@ main(
 input_path= "medical_students_dataset.csv"
 ,
 output_path= "processed_medical_data.csv"
-,
-categorical_columns= ['Gender', 'Blood Type', 'Diabetes', 'Smoking']
 ,
 sampling_columns= ['Heart Rate', 'Age', 'Height', 'Weight', 'Blood Pressure', 'Cholesterol']
 ,
